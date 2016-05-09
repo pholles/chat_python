@@ -41,6 +41,7 @@ class ChatServer(Thread):
                 conn.sendall(self.get_users().encode())
             msg = user.name + datetime.strftime(datetime.now(), '%H:%M: ') + data
             self.send_to_other_clients(msg, conn)
+            conn.sendall(msg.encode())
         conn.close()
 
     def send_to_other_clients(self, msg, conn):
