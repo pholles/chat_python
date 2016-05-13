@@ -20,6 +20,7 @@ class ChatServer(Thread):
 
         # test
         self.connections = []
+        self.log_message = 'On Server:' + self.host + ':' + self.port + '\n'
 
     def exit(self):
         self.s.close()
@@ -70,6 +71,26 @@ class ChatServer(Thread):
             print('Connected to login with: ', address[0], ':', address[1])
             self.connections.append(conn)
             Thread(target=self.run_thread, args=(conn, address)).start()
+
+    def log_generator(self, msg):
+        if not isinstance(msg, str):
+            raise AttributeError
+        thread = 'Thread: ' + str(self.ident)
+        time = datetime.strftime(datetime.now(), '%H:%M:%S ')
+        self.log_message += thread + time + msg + '\n\n--\n'
+
+    def log_file_saver(self, file_place):
+        try:
+            file = open(file_place, mode='a', encoding='utf-8')
+            try:
+                file.write(self.log_message)
+                self.log_message = 'Last log saved at :' + datetime.strftime(datetime.now(), '%H:%M:%S')
+            except (SO_ERROR, IOError):
+                print('Can not save the log')
+            finally:
+                file.close()
+        except (IOError, AttributeError, SO_ERROR):
+            print('Nao foi possivel abrir o arquivo')
 
 
 def main():
