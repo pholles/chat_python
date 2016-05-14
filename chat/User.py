@@ -34,7 +34,7 @@ class User(object):
         self._password = hashlib.sha512(value.encode('utf-8') + salt.encode('utf-8')).hexdigest()
 
     def __str__(self):
-        return '{' + self.name + ' at ' + self.host + ':' + str(self.port) + '}'
+        return '{' + self.name + ' at ' + str(self.host) + ':' + str(self.port) + '}'
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and \

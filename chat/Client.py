@@ -2,7 +2,7 @@ from socket import *
 
 
 class ChatClient(object):
-    def __init__(self, name, password, host, port=8080):
+    def __init__(self, name, password, host, port=8040):
         self.s = socket(AF_INET, SOCK_STREAM)
         self.s.connect((host, port))
 
@@ -13,8 +13,8 @@ class ChatClient(object):
             print('Username has been sent as: ', name)
 
         # Sending password
-        r_thepass = self.s.recv(1024).decode('utf-8')
-        if 'password'.find(r_thepass):
+        r_password = self.s.recv(1024).decode('utf-8')
+        if 'password'.find(r_password):
             self.s.send(password.encode())
             print('Password has been sent')
 
@@ -34,7 +34,10 @@ class ChatClient(object):
 def main():
     a = ChatClient(input('Name: '), input('Password: '), gethostname())
     while True:
-        a.send(input())
+        try:
+            a.send(input())
+        except (Warning, ConnectionError, IOError):
+            pass
         print(a.rec())
 
 if __name__ == '__main__':
